@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
 
 function Inicio() {
   return (
@@ -11,10 +12,24 @@ function Inicio() {
 }
 
 function ReservarCita() {
+  const { register, handleSubmit, formState: { errors } } = useForm();
+  const onSubmit = data => console.log(data);
+
   return (
     <div>
       <h1>Reservar Cita</h1>
-      <p>Aquí va el formulario para reservar una cita...</p>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <input {...register("nombre", { required: true })} placeholder="Nombre" />
+        {errors.nombre && <span>Este campo es requerido</span>}
+        
+        <input {...register("email", { required: true })} placeholder="Email" />
+        {errors.email && <span>Este campo es requerido</span>}
+        
+        <input {...register("fecha", { required: true })} type="date" />
+        {errors.fecha && <span>Este campo es requerido</span>}
+        
+        <input type="submit" />
+      </form>
     </div>
   );
 }

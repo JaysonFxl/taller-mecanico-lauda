@@ -1,6 +1,13 @@
 body {
-  background-color: #000000; /* Negro */
-  color: #FFD700; /* Amarillo Oro */
+  background-color: #333;
+}
+
+.display-4,
+.lead,
+.custom-carousel-container,
+.row > div > h2,
+.row > div > p {
+  color: #fff;
 }
 
 .navbar {
@@ -20,4 +27,47 @@ body {
   background-color: #000000; /* Negro */
   color: #FFD700; /* Amarillo Oro */
   border-color: #FFD700; /* Amarillo Oro */
+}
+
+.custom-carousel-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.custom-carousel {
+  max-width: 800px; /* Ajusta esto al ancho que prefieras */
+  max-height: 500px; /* Ajusta esto a la altura que prefieras */
+  overflow: hidden;
+}
+
+.custom-carousel__image {
+  max-height: 400px;
+  object-fit: cover;
+  margin: 0 auto;
+}
+
+.custom-nav-link {
+  color: white !important;
+  position: relative;
+}
+
+.custom-nav-link::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: gold;
+  visibility: hidden;
+  transition: all 0.3s ease-in-out;
+}
+
+.custom-nav-link:hover::after {
+  visibility: visible;
+  width: 100%;
+}
+
+.row > div {
+  margin-bottom: 1.5rem;
 }

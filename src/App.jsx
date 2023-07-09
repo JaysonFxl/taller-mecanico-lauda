@@ -6,20 +6,21 @@ import './App.css';
 
 function Inicio() {
   return (
-    <div className="container">
-      <h1 className="my-3">Bienvenido a Niki Lauda Taller Mecánico</h1>
-      <p>Aquí va la información del taller...</p>
+    <div className="container text-center py-5 pt-5">
+      <h1 className="display-4 mb-4">Bienvenido a Niki Lauda Taller Mecánico</h1>
+      <p className="lead">En Niki Lauda Taller Mecánico, nos enorgullece ofrecer servicios de reparación y mantenimiento de automóviles de alta calidad. Nuestros técnicos expertos están aquí para atender todas tus necesidades automotrices.</p>
     </div>
   );
 }
 
+// Haz lo mismo para los otros componentes
 function ReservarCita() {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const onSubmit = data => console.log(data);
 
   return (
-    <div className="container">
-      <h1 className="my-3">Reservar Cita</h1>
+    <div className="container py-5">
+      <h1 className="display-4 mb-4 text-center">Reservar Cita</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-3">
           <input {...register("nombre", { required: true })} placeholder="Nombre" className="form-control" />
@@ -36,7 +37,7 @@ function ReservarCita() {
           {errors.fecha && <div className="text-danger">Este campo es requerido</div>}
         </div>
         
-        <input type="submit" className="btn btn-primary" />
+        <input type="submit" className="btn btn-warning" />
       </form>
     </div>
   );
@@ -54,10 +55,10 @@ function Servicios() {
   ];
 
   return (
-    <div className="container">
-      <h1 className="my-3">Servicios</h1>
+    <div className="container py-5">
+      <h1 className="display-4 mb-4 text-center">Servicios</h1>
       {servicios.map((servicio, index) => (
-        <div key={index} className="card mb-3">
+        <div key={index} className="card mb-3 bg-dark text-warning">
           <div className="card-body">
             <h2 className="card-title">{servicio.nombre}</h2>
             <p className="card-text">{servicio.descripcion}</p>
@@ -71,11 +72,11 @@ function Servicios() {
 
 function Contacto() {
   return (
-    <div className="container">
-      <h1 className="my-3">Contacto</h1>
-      <p>Número de contacto: (123) 456-7890</p>
-      <p>Dirección: 123 Calle Principal, Ciudad, Estado, Código Postal</p>
-      <p>Email: taller@nikilauda.com</p>
+    <div className="container text-center py-5">
+      <h1 className="display-4 mb-4">Contacto</h1>
+      <p className="lead">Número de contacto: (123) 456-7890</p>
+      <p className="lead">Dirección: 123 Calle Principal, Ciudad, Estado, Código Postal</p>
+      <p className="lead">Email: taller@nikilauda.com</p>
     </div>
   );
 }
@@ -83,7 +84,7 @@ function Contacto() {
 
 function Navegacion() {
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-light">
+    <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
       <div className="container">
         <Link className="navbar-brand" to="/">Niki Lauda Taller Mecánico</Link>
         <div className="collapse navbar-collapse">

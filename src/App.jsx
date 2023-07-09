@@ -1,21 +1,33 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import { firestore, collection, addDoc } from './Connection.jsx';
 import { useForm } from 'react-hook-form';
 import Swal from 'sweetalert2';
 import { Carousel } from 'react-bootstrap';
-import Fade from 'react-reveal/Fade';
-import Zoom from 'react-reveal/Zoom';
-import './App.css'; // Asegúrate de importar tu archivo CSS
+import './App.css';
+import { motion } from 'framer-motion';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faThumbsUp } from '@fortawesome/free-solid-svg-icons';
+
 
 function Inicio() {
   return (
     <div className="container d-flex flex-column align-items-center justify-content-center text-center py-5 pt-5 mt-5">
-      <Fade top>
+      <motion.div
+        initial={{ y: -50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 1 }}
+      >
         <h1 className="display-4 mb-4 text-white">Bienvenido a Niki Lauda Taller Mecánico</h1>
         <p className="lead text-white mb-5">En Niki Lauda Taller Mecánico, nos enorgullece ofrecer servicios de reparación y mantenimiento de automóviles de alta calidad. Nuestros técnicos expertos están aquí para atender todas tus necesidades automotrices.</p>
-      </Fade>
-      <Zoom>
+      </motion.div>
+      <motion.div
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{ duration: 1 }}
+      >
         <div className="custom-carousel-container mb-5">
+        <Carousel className="custom-carousel">
         <Carousel className="custom-carousel">
           <Carousel.Item>
             <img
@@ -49,49 +61,51 @@ function Inicio() {
             <img
               className="custom-carousel__image"
               src={'https://dercocenter-api.s3.us-east-1.amazonaws.com/images/carcontent/2021-09-21-WEB_EXTERIOR-SWIFT_DESKTOP-1200x700-extra2.jpg'}
-              alt="Cuarta imagen"
+              alt="Quinta imagen"
             />
           </Carousel.Item>
           <Carousel.Item>
             <img
               className="custom-carousel__image"
-              src={'DESKTOP-1200x700-extra2.jpg'}
-              alt="Cuarta imagen"
+              src={'https://cdn.motor1.com/images/mgl/2Pn7g/s1/lanzamiento-toyota-rav4-2021.webp'}
+              alt="Sextaimagen"
             />
           </Carousel.Item>
         </Carousel>
+        </Carousel>
         </div>
-      </Zoom>
-      <Fade bottom cascade>
+      </motion.div>
+      <motion.div
+        initial={{ y: 50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 1 }}
+      >
         <div className="row mt-5 text-white">
-          <div className="col-md-4">
-            <h2>Calidad</h2>
-            <p>Ofrecemos servicios de alta calidad gracias a nuestros técnicos expertos y nuestras herramientas de última generación.</p>
-          </div>
-          <div className="col-md-4">
-            <h2>Confiabilidad</h2>
-            <p>Nos esforzamos por ganar la confianza de nuestros clientes a través de nuestro trabajo honesto y transparente.</p>
-          </div>
-          <div className="col-md-4">
-            <h2>Experiencia</h2>
-            <p>Con años de experiencia en el campo, puedes confiar en que tu vehículo está en buenas manos.</p>
-          </div>
+          {/* Row items */}
         </div>
-      </Fade>
+      </motion.div>
     </div>
   );
 }
 
+
 function ReservarCita() {
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
-  const onSubmit = data => {
-    console.log(data);
-    Swal.fire(
-      'Formulario enviado',
-      'Tu formulario ha sido enviado con éxito',
-      'success'
-    );
+  
+  const onSubmit = async (data) => {
+    try {
+      await addDoc(collection(firestore, 'citas'), data);
+      console.log("Documento escrito con éxito");
+      Swal.fire(
+        'Formulario enviado',
+        'Tu formulario ha sido enviado con éxito',
+        'success'
+      );
+    } catch (e) {
+      console.error("Error al agregar el documento: ", e);
+    }
   };
+
   const handleLimpiar = () => {
     reset(); // Limpia los campos del formulario
     Swal.fire(
@@ -102,13 +116,19 @@ function ReservarCita() {
   };
 
   return (
-    <div className="container py-5 mt-5">
-      <Fade bottom>
-        <div className="card">
-          <div className="card-body">
-            <h1 className="display-4 mb-4 text-center">Reservar Cita</h1>
-            <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="row">
+    <div className="d-flex align-items-center justify-content-center" style={{height: '100vh'}}>
+      <div className="row">
+        <motion.div
+          initial={{ opacity: 0, x: -100 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1 }}
+          className="col-md-6"
+        >
+          <div className="card">
+            <div className="card-body">
+              <h1 className="display-4 mb-4 text-center">Reservar Cita</h1>
+              <form onSubmit={handleSubmit(onSubmit)}>
+              <div className="row">
           <div className="col-md-6 mb-3">
             <input {...register("rut", { required: true })} placeholder="RUT" className="form-control" />
             {errors.rut && <div className="text-danger">Este campo es requerido</div>}
@@ -159,14 +179,30 @@ function ReservarCita() {
           <textarea {...register("detalles", { required: true })} placeholder="Detalles de la consulta" className="form-control" rows="3"></textarea>
           {errors.detalles && <div className="text-danger">Este campo es requerido</div>}
         </div>
-              <div className="d-grid gap-2 d-md-flex justify-content-md-end">
-                <input type="submit" className="btn btn-warning" value="Enviar" />
-                <button type="button" className="btn btn-danger" onClick={handleLimpiar}>Limpiar</button>
-              </div>
-            </form>
+                <div className="d-grid gap-2 d-md-flex justify-content-md-end">
+                  <input type="submit" className="btn btn-warning" value="Enviar" />
+                  <button type="button" className="btn btn-danger" onClick={handleLimpiar}>Limpiar</button>
+                </div>
+              </form>
+            </div>
           </div>
-        </div>
-      </Fade>
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, x: 100 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1 }}
+          className="col-md-6"
+        >
+          <div className="p-5" style={{color: 'gold'}}>
+            <h2>¿Por qué reservar con nosotros?</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris non lorem pellentesque, lacinia dui sed, ultrices eros. Maecenas non diam cursus, imperdiet massa eget, pellentesque ex. Cras efficitur lacus sem, at dignissim metus dapibus ac.</p>
+            <h4>Servicio de calidad: <FontAwesomeIcon icon={faThumbsUp} /></h4>
+            <h4>Buen trato al cliente: <FontAwesomeIcon icon={faThumbsUp} /></h4>
+            <h4>Respuesta rápida: <FontAwesomeIcon icon={faThumbsUp} /></h4>
+            <h4>Precios competitivos: <FontAwesomeIcon icon={faThumbsUp} /></h4>
+          </div>
+        </motion.div>
+      </div>
     </div>
   );
 }
@@ -187,16 +223,20 @@ function Servicios() {
       <h1 className="display-4 mb-4 text-center">Servicios</h1>
       <div className="row">
         {servicios.map((servicio, index) => (
-          <Fade bottom cascade>
-            <div key={index} className="col-md-6 col-lg-4 mb-4">
-              <div className="card h-100 bg-dark text-warning">
-                <div className="card-body">
-                  <h2 className="card-title">{servicio.nombre}</h2>
-                  <p className="card-text">{servicio.descripcion}</p>
-                </div>
+          <motion.div
+            key={index}
+            initial={{ y: 50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 1, delay: index * 0.1 }}
+            className="col-md-6 col-lg-4 mb-4"
+          >
+            <div className="card h-100 bg-dark text-warning">
+              <div className="card-body">
+                <h2 className="card-title">{servicio.nombre}</h2>
+                <p className="card-text">{servicio.descripcion}</p>
               </div>
             </div>
-          </Fade>
+          </motion.div>
         ))}
       </div>
     </div>
@@ -208,39 +248,48 @@ function Contacto() {
     <div className="container py-5 mt-5">
       <h1 className="display-4 mb-4 text-center">Contacto</h1>
       <div className="row justify-content-center">
-        <Fade left>
-          <div className="col-md-6 col-lg-4 mb-4">
-            <div className="card bg-dark text-warning h-100">
-              <div className="card-body text-center">
-                <i className="fas fa-phone fa-3x mb-3"></i>
-                <h5 className="card-title">Número de contacto</h5>
-                <p className="card-text">(123) 456-7890</p>
-              </div>
+        <motion.div
+          initial={{ x: -50, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 1 }}
+          className="col-md-6 col-lg-4 mb-4"
+        >
+          <div className="card bg-dark text-warning h-100">
+            <div className="card-body text-center">
+              <i className="fas fa-phone fa-3x mb-3"></i>
+              <h5 className="card-title">Número de contacto</h5>
+              <p className="card-text">(123) 456-7890</p>
             </div>
           </div>
-        </Fade>
-        <Fade bottom>
-          <div className="col-md-6 col-lg-4 mb-4">
-            <div className="card bg-dark text-warning h-100">
-              <div className="card-body text-center">
-                <i className="fas fa-map-marker-alt fa-3x mb-3"></i>
-                <h5 className="card-title">Dirección</h5>
-                <p className="card-text">123 Calle Principal, Ciudad, Estado, Código Postal</p>
-              </div>
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1 }}
+          className="col-md-6 col-lg-4 mb-4"
+        >
+          <div className="card bg-dark text-warning h-100">
+            <div className="card-body text-center">
+              <i className="fas fa-map-marker-alt fa-3x mb-3"></i>
+              <h5 className="card-title">Dirección</h5>
+              <p className="card-text">123 Calle Principal, Ciudad, Estado, Código Postal</p>
             </div>
           </div>
-        </Fade>
-        <Fade right>
-          <div className="col-md-6 col-lg-4 mb-4">
-            <div className="card bg-dark text-warning h-100">
-              <div className="card-body text-center">
-                <i className="fas fa-envelope fa-3x mb-3"></i>
-                <h5 className="card-title">Email</h5>
-                <p className="card-text">taller@nikilauda.com</p>
-              </div>
+        </motion.div>
+        <motion.div
+          initial={{ x: 50, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 1 }}
+          className="col-md-6 col-lg-4 mb-4"
+        >
+          <div className="card bg-dark text-warning h-100">
+            <div className="card-body text-center">
+              <i className="fas fa-envelope fa-3x mb-3"></i>
+              <h5 className="card-title">Email</h5>
+              <p className="card-text">taller@nikilauda.com</p>
             </div>
           </div>
-        </Fade>
+        </motion.div>
       </div>
     </div>
   );

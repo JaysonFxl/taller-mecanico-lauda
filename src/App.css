@@ -137,3 +137,14 @@ body {
 .my-swal-title, .my-swal-content, .my-swal-confirm-button {
   color: gold;
 }
+
+.info-cita {
+  border: 2px solid gold;
+  border-radius: 10px;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+.info-cita-label {
+  font-weight: bold;
+}

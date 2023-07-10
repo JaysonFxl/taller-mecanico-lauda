@@ -171,15 +171,17 @@ function ReservarCita() {
           Swal.fire({
             title: 'Detalles de la cita',
             html: `
-              <p>RUT: ${doc.data().rut}</p>
-              <p>Nombre: ${doc.data().nombre}</p>
-              <p>Apellido: ${doc.data().apellido}</p>
-              <p>Email: ${doc.data().email}</p>
-              <p>Teléfono: ${doc.data().telefono}</p>
-              <p>Motivo: ${doc.data().motivo}</p>
-              <p>Patente: ${doc.data().patente}</p>
-              <p>Modelo: ${doc.data().modelo}</p>
-              <p>Detalles: ${doc.data().detalles}</p>
+              <div class="info-cita">
+                <p><span class="info-cita-label">RUT:</span> ${doc.data().rut}</p>
+                <p><span class="info-cita-label">Nombre:</span> ${doc.data().nombre}</p>
+                <p><span class="info-cita-label">Apellido:</span> ${doc.data().apellido}</p>
+                <p><span class="info-cita-label">Email:</span> ${doc.data().email}</p>
+                <p><span class="info-cita-label">Teléfono:</span> ${doc.data().telefono}</p>
+                <p><span class="info-cita-label">Motivo:</span> ${doc.data().motivo}</p>
+                <p><span class="info-cita-label">Patente:</span> ${doc.data().patente}</p>
+                <p><span class="info-cita-label">Modelo:</span> ${doc.data().modelo}</p>
+                <p><span class="info-cita-label">Detalles:</span> ${doc.data().detalles}</p>
+              </div>
             `,
             confirmButtonText: 'Cerrar',
             customClass: {
@@ -189,7 +191,7 @@ function ReservarCita() {
               content: 'my-swal-content',
               confirmButton: 'my-swal-confirm-button'
             }
-          });                    
+          });                           
         });
       }
     }

@@ -135,11 +135,11 @@ body {
 }
 
 .my-swal-title, .my-swal-content, .my-swal-confirm-button {
-  color: gold;
+  color: #FFD700; /* Este es un tono de dorado más brillante */
 }
 
 .info-cita {
-  border: 2px solid gold;
+  border: 2px solid #FFD700;
   border-radius: 10px;
   padding: 10px;
   margin: 10px 0;

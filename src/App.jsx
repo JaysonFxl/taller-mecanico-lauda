@@ -181,8 +181,11 @@ function ReservarCita() {
               <p>Modelo: ${doc.data().modelo}</p>
               <p>Detalles: ${doc.data().detalles}</p>
             `,
-            confirmButtonText: 'Cerrar'
-          });
+            confirmButtonText: 'Cerrar',
+            customClass: {
+              container: 'my-swal',
+            }
+          });          
         });
       }
     }

@@ -125,3 +125,16 @@ body {
   background-color: #FFF; /* Blanco */
   color: #333; /* Negro */
 }
+
+.my-swal {
+  background-color: black;
+  color: gold;
+}
+
+.my-swal .swal2-title {
+  color: gold;
+}
+
+.my-swal .swal2-content {
+  color: gold;
+}

@@ -107,3 +107,21 @@ body {
   background-color: #add8e6;
   color: #000;
 }
+
+.my-title-class {
+  color: #FFD700; /* Oro */
+}
+
+.my-content-class {
+  color: #FFF; /* Blanco */
+}
+
+.my-confirm-button-class {
+  background-color: #FFD700; /* Oro */
+  color: #333; /* Negro */
+}
+
+.my-cancel-button-class {
+  background-color: #FFF; /* Blanco */
+  color: #333; /* Negro */
+}

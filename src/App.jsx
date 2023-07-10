@@ -108,7 +108,7 @@ function Virtudes() {
 }
 
 function ReservarCita() {
-  const { register, handleSubmit, reset, formState: { errors, isValid } } = useForm({ mode: 'onChange' });
+  const { register, handleSubmit, reset, formState: { errors, isValid }, getValues } = useForm({ mode: 'onChange' });
   const [showModal, setShowModal] = useState(false);
   const [showReviewModal, setShowReviewModal] = useState(false); // Agrega esta línea
   const [formData, setFormData] = useState(null);
@@ -147,7 +147,15 @@ function ReservarCita() {
           Swal.showValidationMessage('Por favor, ingresa tu RUT')
         }
       },
-      allowOutsideClick: () => !Swal.isLoading()
+      allowOutsideClick: () => !Swal.isLoading(),
+      background: '#333',
+      color: '#FFF',
+      customClass: {
+        title: 'my-title-class',
+        content: 'my-content-class',
+        confirmButton: 'my-confirm-button-class',
+        cancelButton: 'my-cancel-button-class'
+      }
     });
   
     if (rut) {
@@ -163,7 +171,7 @@ function ReservarCita() {
         });
       }
     }
-  }; 
+  };
 
   const handleConfirm = async () => {
     try {
@@ -202,7 +210,7 @@ function ReservarCita() {
         'success'
       );
     }
-  };
+  };  
 
   return (
     <div className="d-flex align-items-center justify-content-center" style={{height: '100vh'}}>

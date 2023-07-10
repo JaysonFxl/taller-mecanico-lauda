@@ -1,9 +1,11 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import { firestore, collection, addDoc } from './Connection.jsx';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Swal from 'sweetalert2';
 import { Carousel } from 'react-bootstrap';
+import { Modal, Button } from 'react-bootstrap';
 import './App.css';
 import { motion } from 'framer-motion';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -88,22 +90,37 @@ function Inicio() {
   );
 }
 
-
 function ReservarCita() {
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
-  
-  const onSubmit = async (data) => {
+  const [showModal, setShowModal] = useState(false);
+  const [formData, setFormData] = useState(null);
+
+  const handleClose = () => setShowModal(false);
+  const handleShow = () => setShowModal(true);
+
+  const onSubmit = (data) => {
+    setFormData(data);
+    setShowModal(true);
+  };
+
+  const handleConfirm = async () => {
     try {
-      await addDoc(collection(firestore, 'citas'), data);
+      await addDoc(collection(firestore, 'citas'), formData);
       console.log("Documento escrito con éxito");
       Swal.fire(
         'Formulario enviado',
         'Tu formulario ha sido enviado con éxito',
         'success'
       );
+      reset();
+      setShowModal(false);
     } catch (e) {
       console.error("Error al agregar el documento: ", e);
     }
+  };
+
+  const handleCancel = () => {
+    setShowModal(false);
   };
 
   const handleLimpiar = () => {
@@ -203,6 +220,31 @@ function ReservarCita() {
           </div>
         </motion.div>
       </div>
+
+      <Modal show={showModal} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Revisión de Datos</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="review-data-container">
+            <div className="review-data-header">Por favor revisa tus datos antes de enviar:</div>
+            {formData && Object.entries(formData).map(([key, value]) => (
+              <div className="review-data-item" key={key}>
+                <span className="review-data-label">{key}:</span>
+                <span className="review-data-value">{value}</span>
+              </div>
+            ))}
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCancel}>
+            Modificar
+          </Button>
+          <Button className="btn-custom" onClick={handleConfirm}>
+            Enviar
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }

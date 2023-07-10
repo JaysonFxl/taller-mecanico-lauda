@@ -71,3 +71,39 @@ body {
 .row > div {
   margin-bottom: 1.5rem;
 }
+
+.btn-custom {
+  background-color: #add8e6; /* Este es un tono de azul claro */
+  color: #000; /* El texto será negro */
+}
+
+.review-data-container {
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+.review-data-header {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.review-data-item {
+  margin-bottom: 10px;
+}
+
+.review-data-label {
+  font-weight: bold;
+}
+
+.review-data-value {
+  margin-left: 5px;
+}
+
+.btn-custom {
+  background-color: #add8e6;
+  color: #000;
+}

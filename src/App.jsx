@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
-import { firestore, collection, addDoc } from './Connection.jsx';
+import { firestore, collection, addDoc, getDocs, query, where } from './Connection.jsx';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Swal from 'sweetalert2';
@@ -27,11 +27,9 @@ function Inicio() {
         animate={{ scale: 1 }}
         transition={{ duration: 1 }}
       >
-        <div className="d-flex flex-row justify-content-center align-items-start mb-5">
+        <div className="d-flex flex-row justify-content-center align-items-stretch mb-5">
           <div className="custom-carousel-container">
             <Carousel className="custom-carousel">
-            <Carousel className="custom-carousel">
-        <Carousel className="custom-carousel">
           <Carousel.Item>
             <img
               className="custom-carousel__image"
@@ -74,11 +72,9 @@ function Inicio() {
               alt="Sextaimagen"
             />
           </Carousel.Item>
-        </Carousel>
-        </Carousel>
             </Carousel>
           </div>
-          <div className="virtudes-container ml-5" style={{ marginLeft: '50px' }}>
+          <div className="virtudes-container ml-5" style={{ marginLeft: '50px', width: '300px' }}>
             <Virtudes />
           </div>
         </div>
@@ -94,7 +90,7 @@ function Inicio() {
       </motion.div>
     </div>
   );
-} 
+}
 
 function Virtudes() {
   return (
@@ -112,17 +108,62 @@ function Virtudes() {
 }
 
 function ReservarCita() {
-  const { register, handleSubmit, reset, formState: { errors }, getValues } = useForm();
+  const { register, handleSubmit, reset, formState: { errors, isValid } } = useForm({ mode: 'onChange' });
   const [showModal, setShowModal] = useState(false);
+  const [showReviewModal, setShowReviewModal] = useState(false); // Agrega esta línea
   const [formData, setFormData] = useState(null);
 
   const handleClose = () => setShowModal(false);
   const handleShow = () => setShowModal(true);
 
   const onSubmit = (data) => {
+    if (!isValid) {
+      Swal.fire(
+        'Formulario incompleto',
+        'Por favor, completa todos los campos requeridos antes de enviar el formulario.',
+        'warning'
+      );
+      return;
+    }
+
     setFormData(data);
     setShowModal(true);
   };
+
+  const handleCheckCita = async () => {
+    const { value: rut } = await Swal.fire({
+      title: 'Revisar mi cita',
+      input: 'text',
+      inputLabel: 'Por favor, ingresa tu RUT',
+      inputPlaceholder: 'Ejemplo: 12345678-9',
+      inputAttributes: {
+        autocapitalize: 'off'
+      },
+      showCancelButton: true,
+      confirmButtonText: 'Revisar',
+      showLoaderOnConfirm: true,
+      preConfirm: (rut) => {
+        if (!rut) {
+          Swal.showValidationMessage('Por favor, ingresa tu RUT')
+        }
+      },
+      allowOutsideClick: () => !Swal.isLoading()
+    });
+  
+    if (rut) {
+      const citaRef = collection(firestore, 'citas');
+      const q = query(citaRef, where("rut", "==", rut));
+      const querySnapshot = await getDocs(q);
+      if (querySnapshot.empty) {
+        Swal.fire('No se encontró ninguna cita con ese RUT');
+      } else {
+        querySnapshot.forEach((doc) => {
+          console.log(doc.id, " => ", doc.data());
+          // Aquí puedes mostrar los datos de la cita al usuario
+        });
+      }
+    }
+  }; 
 
   const handleConfirm = async () => {
     try {
@@ -231,6 +272,9 @@ function ReservarCita() {
                   <input type="submit" className="btn btn-warning" value="Enviar" />
                   <button type="button" className="btn btn-danger" onClick={handleLimpiar}>Limpiar</button>
                 </div>
+                <div className="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+                  <button type="button" className="btn btn-info" onClick={handleCheckCita}>Revisar mi cita</button>
+                </div>
               </form>
             </div>
           </div>
@@ -251,6 +295,20 @@ function ReservarCita() {
           </div>
         </motion.div>
       </div>
+
+      <Modal show={showReviewModal} onHide={() => setShowReviewModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Revisar mi cita</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Aquí puedes agregar el código para mostrar la información de la cita del usuario.
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowReviewModal(false)}>
+            Cerrar
+          </Button>
+        </Modal.Footer>
+      </Modal>
 
       <Modal show={showModal} onHide={handleClose}>
         <Modal.Header closeButton>

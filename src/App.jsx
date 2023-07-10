@@ -172,15 +172,15 @@ function ReservarCita() {
             title: 'Detalles de la cita',
             html: `
               <div class="info-cita">
-                <p><span class="info-cita-label">RUT:</span> ${doc.data().rut}</p>
-                <p><span class="info-cita-label">Nombre:</span> ${doc.data().nombre}</p>
-                <p><span class="info-cita-label">Apellido:</span> ${doc.data().apellido}</p>
-                <p><span class="info-cita-label">Email:</span> ${doc.data().email}</p>
-                <p><span class="info-cita-label">Teléfono:</span> ${doc.data().telefono}</p>
-                <p><span class="info-cita-label">Motivo:</span> ${doc.data().motivo}</p>
-                <p><span class="info-cita-label">Patente:</span> ${doc.data().patente}</p>
-                <p><span class="info-cita-label">Modelo:</span> ${doc.data().modelo}</p>
-                <p><span class="info-cita-label">Detalles:</span> ${doc.data().detalles}</p>
+                <p><span class="info-cita-label">RUT:</span> <span class="info-cita-value">${doc.data().rut}</span></p>
+                <p><span class="info-cita-label">Nombre:</span> <span class="info-cita-value">${doc.data().nombre}</span></p>
+                <p><span class="info-cita-label">Apellido:</span> <span class="info-cita-value">${doc.data().apellido}</span></p>
+                <p><span class="info-cita-label">Email:</span> <span class="info-cita-value">${doc.data().email}</span></p>
+                <p><span class="info-cita-label">Teléfono:</span> <span class="info-cita-value">${doc.data().telefono}</span></p>
+                <p><span class="info-cita-label">Motivo:</span> <span class="info-cita-value">${doc.data().motivo}</span></p>
+                <p><span class="info-cita-label">Patente:</span> <span class="info-cita-value">${doc.data().patente}</span></p>
+                <p><span class="info-cita-label">Modelo:</span> <span class="info-cita-value">${doc.data().modelo}</span></p>
+                <p><span class="info-cita-label">Detalles:</span> <span class="info-cita-value">${doc.data().detalles}</span></p>
               </div>
             `,
             confirmButtonText: 'Cerrar',
@@ -191,7 +191,7 @@ function ReservarCita() {
               content: 'my-swal-content',
               confirmButton: 'my-swal-confirm-button'
             }
-          });                           
+          });
         });
       }
     }

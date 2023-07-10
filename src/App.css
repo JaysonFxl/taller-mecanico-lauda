@@ -126,15 +126,14 @@ body {
   color: #333; /* Negro */
 }
 
-.my-swal {
+.my-swal-container {
   background-color: black;
-  color: gold;
 }
 
-.my-swal .swal2-title {
-  color: gold;
+.my-swal-popup {
+  background-color: black;
 }
 
-.my-swal .swal2-content {
+.my-swal-title, .my-swal-content, .my-swal-confirm-button {
   color: gold;
 }

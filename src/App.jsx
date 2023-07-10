@@ -183,9 +183,13 @@ function ReservarCita() {
             `,
             confirmButtonText: 'Cerrar',
             customClass: {
-              container: 'my-swal',
+              container: 'my-swal-container',
+              popup: 'my-swal-popup',
+              title: 'my-swal-title',
+              content: 'my-swal-content',
+              confirmButton: 'my-swal-confirm-button'
             }
-          });          
+          });                    
         });
       }
     }

@@ -168,6 +168,21 @@ function ReservarCita() {
         querySnapshot.forEach((doc) => {
           console.log(doc.id, " => ", doc.data());
           // Aquí puedes mostrar los datos de la cita al usuario
+          Swal.fire({
+            title: 'Detalles de la cita',
+            html: `
+              <p>RUT: ${doc.data().rut}</p>
+              <p>Nombre: ${doc.data().nombre}</p>
+              <p>Apellido: ${doc.data().apellido}</p>
+              <p>Email: ${doc.data().email}</p>
+              <p>Teléfono: ${doc.data().telefono}</p>
+              <p>Motivo: ${doc.data().motivo}</p>
+              <p>Patente: ${doc.data().patente}</p>
+              <p>Modelo: ${doc.data().modelo}</p>
+              <p>Detalles: ${doc.data().detalles}</p>
+            `,
+            confirmButtonText: 'Cerrar'
+          });
         });
       }
     }

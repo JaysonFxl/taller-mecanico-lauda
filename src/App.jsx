@@ -236,6 +236,16 @@ function ReservarCita() {
     }
   };  
 
+  const handleShowTerms = (e) => {
+    e.preventDefault();
+  
+    Swal.fire({
+      title: 'Términos y condiciones',
+      text: 'Aquí puedes poner tus términos y condiciones...',
+      confirmButtonText: 'Cerrar'
+    });
+  };
+
   return (
     <div className="d-flex align-items-center justify-content-center" style={{height: '100vh'}}>
       <div className="row">
@@ -299,6 +309,11 @@ function ReservarCita() {
         <div className="mb-3">
           <textarea {...register("detalles", { required: true })} placeholder="Detalles de la consulta" className="form-control" rows="3"></textarea>
           {errors.detalles && <div className="text-danger">Este campo es requerido</div>}
+        </div>
+        <div className="mb-3">
+          <input {...register("terms", { required: true })} type="checkbox" id="terms" />
+          <label htmlFor="terms">Acepto los <a href="#" onClick={handleShowTerms}>Términos y condiciones</a></label>
+          {errors.terms && <div className="text-danger">Debes aceptar los términos y condiciones</div>}
         </div>
                 <div className="d-grid gap-2 d-md-flex justify-content-md-end">
                   <input type="submit" className="btn btn-warning" value="Enviar" />

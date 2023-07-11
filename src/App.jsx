@@ -14,7 +14,8 @@ import * as yup from 'yup';//yup: es una biblioteca para validar datos.
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThumbsUp } from '@fortawesome/free-solid-svg-icons';
 
-function Inicio() { //Inicio: es un componente de función que devuelve el contenido de la página de inicio.
+//Inicio: es un componente de función que devuelve el contenido de la página de inicio.
+function Inicio() { 
   return (
     <div className="container d-flex flex-column align-items-center justify-content-center text-center py-5 pt-5 mt-5">
       <motion.div //motion.div: es un componente de Framer Motion que permite animar elementos HTML.
@@ -95,7 +96,8 @@ function Inicio() { //Inicio: es un componente de función que devuelve el conte
   );
 }
 
-function Virtudes() { //Virtudes: es un componente de función que devuelve el contenido de las virtudes.
+//Virtudes: es un componente de función que devuelve el contenido de las virtudes.
+function Virtudes() { 
   return (
     //div: es un elemento HTML que se usa para agrupar otros elementos HTML.
     <div>
@@ -110,7 +112,8 @@ function Virtudes() { //Virtudes: es un componente de función que devuelve el c
   );
 }
 
-function ReservarCita() { //ReservarCita: es un componente de función que devuelve el contenido de la página de reservar cita.
+//ReservarCita: es un componente de función que devuelve el contenido de la página de reservar cita.
+function ReservarCita() {
   //object: es un método de yup que se usa para validar objetos.
   const schema = yup.object().shape({
     rut: yup //rut: es un campo del objeto que se está validando.
@@ -127,9 +130,10 @@ function ReservarCita() { //ReservarCita: es un componente de función que devue
       .string()
       .email("Debe ser un email válido")
       .required("Este campo es requerido"),
-    telefono: yup
+      telefono: yup
       .string()
-      .required("Este campo es requerido"),
+      .required("Este campo es requerido")
+      .matches(/^[0-9]{9}$/, "El número de teléfono debe tener exactamente 9 dígitos"),    
     motivo: yup
       .string()
       .required("Este campo es requerido"),
@@ -196,6 +200,7 @@ function ReservarCita() { //ReservarCita: es un componente de función que devue
     }
   };
 
+  //handleCheckCita: es una función que se usa para revisar una cita.
   const handleCheckCita = async () => {
     const { value: rut } = await Swal.fire({
       title: 'Revisar mi cita',
@@ -224,6 +229,7 @@ function ReservarCita() { //ReservarCita: es un componente de función que devue
       }
     });
 
+    //deleteCita: es una función que se usa para eliminar una cita.
     async function deleteCita(docId) {
       const citaRef = doc(db, 'citas', docId);
       await deleteDoc(citaRef);
@@ -277,12 +283,12 @@ function ReservarCita() { //ReservarCita: es un componente de función que devue
     }
     };
     
-    const deleteCita = async (id) => {
-      await deleteDoc(doc(db, 'citas', id));
-      Swal.fire('Cita cancelada', 'Tu cita ha sido cancelada con éxito', 'success');
-    };
+  const deleteCita = async (id) => {
+    await deleteDoc(doc(db, 'citas', id));
+    Swal.fire('Cita cancelada', 'Tu cita ha sido cancelada con éxito', 'success');
+  };
     
-
+  //handleConfirm: es una función que se usa para enviar el formulario.
   const handleConfirm = async () => {
     try {
       await addDoc(collection(db, 'citas'), formData);
@@ -299,10 +305,12 @@ function ReservarCita() { //ReservarCita: es un componente de función que devue
     }
   };
   
+  //handleCancel: es una función que se usa para cancelar el envío del formulario.
   const handleCancel = () => {
     setShowModal(false);
   };
 
+  //handleLimpiar: es una función que se usa para limpiar los campos del formulario.
   const handleLimpiar = () => {
     const formValues = getValues();
     const isEmpty = Object.values(formValues).every(x => (x === null || x === ''));
@@ -322,6 +330,7 @@ function ReservarCita() { //ReservarCita: es un componente de función que devue
     }
   }; 
 
+  //handleTermsAndConditions: es una función que se usa para mostrar los términos y condiciones.
   const handleTermsAndConditions = () => {
     Swal.fire({
       title: 'Términos y Condiciones',
@@ -349,7 +358,8 @@ function ReservarCita() { //ReservarCita: es un componente de función que devue
       }
     });
   };  
-
+   
+  //reasons: es una variable que se usa para almacenar las razones.
   const reasons = [
     {
       title: "Experiencia y profesionalismo",
@@ -377,6 +387,7 @@ function ReservarCita() { //ReservarCita: es un componente de función que devue
     },
   ];
 
+  //useEffect: es un hook de React que se usa para ejecutar efectos secundarios en los componentes.
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentItem((prevItem) => (prevItem + 1) % reasons.length);
@@ -399,7 +410,7 @@ function ReservarCita() { //ReservarCita: es un componente de función que devue
               <form onSubmit={handleSubmit(onSubmit)}>
               <div className="row">
           <div className="col-md-6 mb-3">
-            <input {...register("rut", { required: true })} placeholder="RUT (Ej:12345-5)" className="form-control" />
+            <input {...register("rut", { required: true })} placeholder="RUT (Ej:12345678-9)" className="form-control" />
             {errors.rut && <div className="text-danger">Este campo es requerido</div>}
           </div>
           <div className="col-md-6 mb-3">
@@ -421,9 +432,9 @@ function ReservarCita() { //ReservarCita: es un componente de función que devue
         <div className="col-md-6 mb-3">
           <div className="input-group">
             <span className="input-group-text" id="basic-addon1">+56</span>
-            <input {...register("telefono", { required: true, pattern: /^[0-9]*$/ })} placeholder="Teléfono" className="form-control" />
+            <input {...register("telefono", { required: true, pattern: /^[0-9]*$/ })} placeholder="Teléfono (Ej:91234567)" className="form-control" />
           </div>
-          {errors.telefono && <div className="text-danger">Este campo es requerido y solo debe contener números</div>}
+          {errors.telefono && <div className="text-danger">Este campo es requerido y solo debe contener nueve números</div>}
         </div>
           <div className="col-md-6 mb-3">
             <select {...register("motivo", { required: true })} className="form-control">
@@ -477,7 +488,7 @@ function ReservarCita() { //ReservarCita: es un componente de función que devue
           </div>
         </motion.div>
       </div>
-
+       
       <Modal show={showReviewModal} onHide={() => setShowReviewModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Revisar mi cita</Modal.Title>
@@ -491,8 +502,8 @@ function ReservarCita() { //ReservarCita: es un componente de función que devue
           </Button>
         </Modal.Footer>
       </Modal>
-
-      <Modal show={showModal} onHide={handleClose}>
+       
+      <Modal show={showModal} onHide={handleClose}> 
         <Modal.Header closeButton>
           <Modal.Title>Revisión de Datos</Modal.Title>
         </Modal.Header>
@@ -520,6 +531,7 @@ function ReservarCita() { //ReservarCita: es un componente de función que devue
   );
 }
 
+///Servicios: es un componente de función que devuelve el contenido de la página de servicios.
 function Servicios() {
   const servicios = [
     { nombre: 'Cambio de aceite', descripcion: 'Cambio de aceite y filtro.' },
@@ -556,6 +568,7 @@ function Servicios() {
   );
 }
 
+//Contacto: es un componente de función que devuelve el contenido de la página de contacto.
 function Contacto() {
   return (
     <div className="container py-5 mt-5">
@@ -608,6 +621,7 @@ function Contacto() {
   );
 }
 
+//Navegacion: es un componente de función que devuelve el contenido de la barra de navegación.
 function Navegacion() {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
@@ -626,6 +640,7 @@ function Navegacion() {
   );
 }
 
+//App: es un componente de función que devuelve el contenido de la aplicación.
 function App() {
   return (
     <div className="App">

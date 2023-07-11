@@ -1,23 +1,23 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
-import { doc, getDoc, setDoc } from "firebase/firestore";
-import { db, collection, addDoc, getDocs, query, where } from './Connection.jsx';
-import { useState, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import Swal from 'sweetalert2';
-import { Carousel } from 'react-bootstrap';
-import { Modal, Button } from 'react-bootstrap';
-import './App.css';
-import { motion } from 'framer-motion';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
+import React from 'react'; //React: es una biblioteca de JavaScript para construir interfaces de usuario.
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';//react-router-dom: se usa para manejar el enrutamiento en tu aplicación React
+import { doc, getDoc, setDoc } from "firebase/firestore";//firebase/firestore: se usa para interactuar con una base de datos Firestore de Firebase.
+import { db, collection, addDoc, getDocs, query, where, deleteDoc } from './Connection.jsx';
+import { useState, useEffect } from 'react';//useState y useEffect: son hooks de React. useState se utiliza para agregar estado local a los componentes de función, y useEffect para ejecutar efectos secundarios en los componentes.
+import { useForm } from 'react-hook-form';//react-hook-form: es una biblioteca de formularios para React.
+import Swal from 'sweetalert2';//sweetalert2: es una biblioteca para mostrar pop-ups "hermosos, responsivos, personalizables y accesibles".
+import { Carousel } from 'react-bootstrap';//react-bootstrap: es una biblioteca de componentes de interfaz de usuario para React.
+import { Modal, Button } from 'react-bootstrap';//
+import './App.css';//App.css: es un archivo CSS que contiene estilos para la aplicación.
+import { motion } from 'framer-motion';//framer-motion: es una biblioteca de animaciones para React.
+import { yupResolver } from '@hookform/resolvers/yup';//yup: es una biblioteca para validar datos.
+import * as yup from 'yup';//yup: es una biblioteca para validar datos.
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThumbsUp } from '@fortawesome/free-solid-svg-icons';
 
-function Inicio() {
+function Inicio() { //Inicio: es un componente de función que devuelve el contenido de la página de inicio.
   return (
     <div className="container d-flex flex-column align-items-center justify-content-center text-center py-5 pt-5 mt-5">
-      <motion.div
+      <motion.div //motion.div: es un componente de Framer Motion que permite animar elementos HTML.
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 1 }}
@@ -94,8 +94,10 @@ function Inicio() {
     </div>
   );
 }
-function Virtudes() {
+
+function Virtudes() { //Virtudes: es un componente de función que devuelve el contenido de las virtudes.
   return (
+    //div: es un elemento HTML que se usa para agrupar otros elementos HTML.
     <div>
       <h2 className="text-white">Calidad</h2>
       <p className="text-white">Ofrecemos servicios de alta calidad gracias a nuestros técnicos expertos y nuestras herramientas de última generación.</p>
@@ -108,12 +110,13 @@ function Virtudes() {
   );
 }
 
-function ReservarCita() {
+function ReservarCita() { //ReservarCita: es un componente de función que devuelve el contenido de la página de reservar cita.
+  //object: es un método de yup que se usa para validar objetos.
   const schema = yup.object().shape({
-    rut: yup
-      .string()
-      .required("Este campo es requerido")
-      .matches(/^\d{7,9}-[\dKk]$/, "El RUT debe tener el formato 12345678-9"),
+    rut: yup //rut: es un campo del objeto que se está validando.
+      .string() //string: es un método de yup que se usa para validar cadenas de texto.
+      .required("Este campo es requerido") //required: es un método de yup que se usa para validar que el campo no esté vacío.
+      .matches(/^\d{7,9}-[\dKk]$/, "El RUT debe tener el formato 12345678-9"), //matches: es un método de yup que se usa para validar que el campo cumpla con una expresión regular.
     nombre: yup
       .string()
       .required("Este campo es requerido"),
@@ -140,34 +143,38 @@ function ReservarCita() {
       .string()
       .required("Este campo es requerido"),
     terms: yup
-      .boolean()
-      .oneOf([true], 'Debes aceptar los términos y condiciones')
+      .boolean() //boolean: es un método de yup que se usa para validar que el campo sea un booleano.
+      .oneOf([true], 'Debes aceptar los términos y condiciones') //oneOf: es un método de yup que se usa para validar que el campo tenga un valor específico.
   });
-
-  const { register, handleSubmit, reset, formState: { errors, isValid }, getValues } = useForm({
+  //register, handleSubmit, reset, formState: { errors, isValid }, getValues: son métodos de react-hook-form que se usan para registrar campos, enviar el formulario, limpiar el formulario, obtener los errores de validación, verificar si el formulario es válido y obtener los valores de los campos.
+  const { register, handleSubmit, reset, formState: { errors, isValid }, getValues } = useForm({ 
+    //mode: es una propiedad de react-hook-form que se usa para especificar cuándo se debe verificar la validación de los campos.
     mode: 'onChange',
+    //resolver: es una propiedad de react-hook-form que se usa para especificar el validador de datos.
     resolver: yupResolver(schema),
   });
+  
+  const [showModal, setShowModal] = useState(false); //useState: es un hook de React que se usa para agregar estado local a los componentes de función.
+  const [showReviewModal, setShowReviewModal] = useState(false); //useState: es un hook de React que se usa para agregar estado local a los componentes de función.
+  const [formData, setFormData] = useState(null); //useState: es un hook de React que se usa para agregar estado local a los componentes de función.
+  const [currentItem, setCurrentItem] = useState(0); //useState: es un hook de React que se usa para agregar estado local a los componentes de función.
 
-  const [showModal, setShowModal] = useState(false);
-  const [showReviewModal, setShowReviewModal] = useState(false); // Agrega esta línea
-  const [formData, setFormData] = useState(null);
-  const [currentItem, setCurrentItem] = useState(0);
+  const handleClose = () => setShowModal(false); //setShowModal: es una función que se usa para cambiar el valor de la variable showModal.
+  const handleShow = () => setShowModal(true); //setShowModal: es una función que se usa para cambiar el valor de la variable showModal.
 
-  const handleClose = () => setShowModal(false);
-  const handleShow = () => setShowModal(true);
-
-  const onSubmit = async (data) => {
-    if (!isValid) {
-      Swal.fire(
+  //onSubmit: es una función que se usa para enviar el formulario.
+  const onSubmit = async (data) => { 
+    //isValid: es una variable que se usa para verificar si el formulario es válido.
+    if (!isValid) { 
+      Swal.fire( 
         'Formulario incompleto',
         'Por favor, completa todos los campos requeridos antes de enviar el formulario.',
         'warning'
       );
-      return;
+      return; //return: es una palabra clave que se usa para salir de la función.
     }
-  
-    const { rut } = data;
+    //rut: es una variable que se usa para almacenar el valor del campo rut.
+    const { rut } = data; 
   
     // Verificar si ya existe un documento con el mismo RUT
     const docRef = doc(db, 'citas', rut);
@@ -216,6 +223,12 @@ function ReservarCita() {
         cancelButton: 'my-cancel-button-class'
       }
     });
+
+    async function deleteCita(docId) {
+      const citaRef = doc(db, 'citas', docId);
+      await deleteDoc(citaRef);
+      Swal.fire('Cita cancelada', 'La cita ha sido cancelada con éxito', 'success');
+    }     
   
     if (rut) {
       const citaRef = collection(db, 'citas');
@@ -242,19 +255,33 @@ function ReservarCita() {
                 <p><span class="info-cita-label">Detalles:</span> <span class="info-cita-value">${doc.data().detalles}</span></p>
               </div>
             `,
+            showCancelButton: true, // Agrega esta línea
+            cancelButtonText: 'Cancelar cita', // Agrega esta línea
             confirmButtonText: 'Cerrar',
             customClass: {
               container: 'my-swal-container',
               popup: 'my-swal-popup',
               title: 'my-swal-title',
               content: 'my-swal-content',
-              confirmButton: 'my-swal-confirm-button'
+              confirmButton: 'my-swal-confirm-button',
+              cancelButton: 'my-swal-cancel-button' // Agrega esta línea
+            }
+          }).then((result) => {
+            // Si el usuario hace clic en "Cancelar cita", eliminar la cita
+            if (result.dismiss === Swal.DismissReason.cancel) {
+              deleteCita(doc.id);
             }
           });
         });
       }
     }
-  };
+    };
+    
+    const deleteCita = async (id) => {
+      await deleteDoc(doc(db, 'citas', id));
+      Swal.fire('Cita cancelada', 'Tu cita ha sido cancelada con éxito', 'success');
+    };
+    
 
   const handleConfirm = async () => {
     try {
@@ -544,7 +571,7 @@ function Contacto() {
             <div className="card-body text-center">
               <i className="fas fa-phone fa-3x mb-3"></i>
               <h5 className="card-title">Número de contacto</h5>
-              <p className="card-text">(123) 456-7890</p>
+              <p className="card-text">(+56) 985674532</p>
             </div>
           </div>
         </motion.div>
@@ -558,7 +585,7 @@ function Contacto() {
             <div className="card-body text-center">
               <i className="fas fa-map-marker-alt fa-3x mb-3"></i>
               <h5 className="card-title">Dirección</h5>
-              <p className="card-text">123 Calle Principal, Ciudad, Estado, Código Postal</p>
+              <p className="card-text">123 Calle Principal, Los Ángeles, Bio - Bio, 453000</p>
             </div>
           </div>
         </motion.div>

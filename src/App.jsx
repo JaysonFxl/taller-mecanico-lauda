@@ -94,6 +94,19 @@ function Inicio() {
     </div>
   );
 }
+function Virtudes() {
+  return (
+    <div>
+      <h2 className="text-white">Calidad</h2>
+      <p className="text-white">Ofrecemos servicios de alta calidad gracias a nuestros técnicos expertos y nuestras herramientas de última generación.</p>
+
+      <h2 className="text-white">Confiabilidad</h2>
+      <p className="text-white">Nos esforzamos por ganar la confianza de nuestros clientes a través de nuestro trabajo honesto y transparente.</p>
+      <h2 className="text-white">Experiencia</h2>
+      <p className="text-white">Con años de experiencia en el campo, puedes confiar en que tu vehículo está en buenas manos.</p>
+    </div>
+  );
+}
 
 function ReservarCita() {
   const schema = yup.object().shape({

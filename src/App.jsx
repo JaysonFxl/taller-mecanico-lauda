@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import { firestore, collection, addDoc, getDocs, query, where } from './Connection.jsx';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import Swal from 'sweetalert2';
 import { Carousel } from 'react-bootstrap';
@@ -112,6 +112,7 @@ function ReservarCita() {
   const [showModal, setShowModal] = useState(false);
   const [showReviewModal, setShowReviewModal] = useState(false); // Agrega esta línea
   const [formData, setFormData] = useState(null);
+  const [currentItem, setCurrentItem] = useState(0);
 
   const handleClose = () => setShowModal(false);
   const handleShow = () => setShowModal(true);
@@ -241,7 +242,6 @@ function ReservarCita() {
       title: 'Términos y Condiciones',
       html: `
         <div class="terms-conditions">
-          <h1>Términos y Condiciones</h1>
           <p>Al enviar este formulario, usted acepta los siguientes términos y condiciones:</p>
           <ol>
             <li>El taller mecánico se reserva el derecho de rechazar cualquier cita por cualquier motivo.</li>
@@ -265,8 +265,42 @@ function ReservarCita() {
     });
   };  
 
+  const reasons = [
+    {
+      title: "Experiencia y profesionalismo",
+      description: "Contamos con un equipo de mecánicos altamente capacitados y con años de experiencia en el campo. Nuestro personal está comprometido con la excelencia y siempre se esfuerza por proporcionar el mejor servicio posible."
+    },
+    {
+      title: "Servicio personalizado",
+      description: "Entendemos que cada vehículo y cada cliente son únicos. Por eso, ofrecemos un servicio personalizado para satisfacer tus necesidades específicas. Nos tomamos el tiempo para entender tus requerimientos y proporcionar soluciones que se ajusten a ellos."
+    },
+    {
+      title: "Tecnología de punta",
+      description: "Utilizamos la última tecnología y equipos para diagnosticar y reparar tu vehículo. Esto nos permite proporcionar un servicio eficiente y de alta calidad."
+    },
+    {
+      title: " Precios competitivos",
+      description: "Ofrecemos precios justos y competitivos. Nuestro objetivo es proporcionar un servicio de alta calidad a un precio que puedas permitirte."
+    },
+    {
+      title: "Transparencia",
+      description: "Creemos en la transparencia total. Te explicaremos claramente qué reparaciones son necesarias y por qué, y siempre te daremos un presupuesto antes de comenzar cualquier trabajo."
+    },
+    {
+      title: "Comodidad",
+      description: "Nuestro sistema de reservas en línea hace que sea fácil programar una cita en un momento que te convenga. Además, ofrecemos un servicio de recogida y entrega de vehículos para mayor comodidad."
+    },
+  ];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentItem((prevItem) => (prevItem + 1) % reasons.length);
+    }, 10000); // Cambia cada 10 segundos
+    return () => clearInterval(timer);
+  }, [])
+
   return (
-    <div className="d-flex align-items-center justify-content-center" style={{height: '100vh'}}>
+    <div className="d-flex align-items-center justify-content-center" style={{height: '100vh', marginTop: '50px'}}>
       <div className="row">
         <motion.div
           initial={{ opacity: 0, x: -100 }}
@@ -351,13 +385,10 @@ function ReservarCita() {
           transition={{ duration: 1 }}
           className="col-md-6"
         >
-          <div className="p-5" style={{color: 'gold'}}>
+          <div className="p-5" style={{color: 'gold', maxWidth: '600px', margin: '50px auto 0', padding: '0 20px'}}>
             <h2>¿Por qué reservar con nosotros?</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris non lorem pellentesque, lacinia dui sed, ultrices eros. Maecenas non diam cursus, imperdiet massa eget, pellentesque ex. Cras efficitur lacus sem, at dignissim metus dapibus ac.</p>
-            <h4>Servicio de calidad: <FontAwesomeIcon icon={faThumbsUp} /></h4>
-            <h4>Buen trato al cliente: <FontAwesomeIcon icon={faThumbsUp} /></h4>
-            <h4>Respuesta rápida: <FontAwesomeIcon icon={faThumbsUp} /></h4>
-            <h4>Precios competitivos: <FontAwesomeIcon icon={faThumbsUp} /></h4>
+            <h3>{reasons[currentItem].title}</h3>
+            <p>{reasons[currentItem].description}</p>
           </div>
         </motion.div>
       </div>

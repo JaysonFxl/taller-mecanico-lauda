@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
-import { firestore, collection, addDoc, getDocs, query, where } from './Connection.jsx';
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { db, collection, addDoc, getDocs, query, where } from './Connection.jsx';
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import Swal from 'sweetalert2';
@@ -8,6 +9,8 @@ import { Carousel } from 'react-bootstrap';
 import { Modal, Button } from 'react-bootstrap';
 import './App.css';
 import { motion } from 'framer-motion';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThumbsUp } from '@fortawesome/free-solid-svg-icons';
 
@@ -92,23 +95,20 @@ function Inicio() {
   );
 }
 
-function Virtudes() {
-  return (
-    <div>
-      <h2 className="text-white">Calidad</h2>
-      <p className="text-white">Ofrecemos servicios de alta calidad gracias a nuestros técnicos expertos y nuestras herramientas de última generación.</p>
-
-      <h2 className="text-white">Confiabilidad</h2>
-      <p className="text-white">Nos esforzamos por ganar la confianza de nuestros clientes a través de nuestro trabajo honesto y transparente.</p>
-
-      <h2 className="text-white">Experiencia</h2>
-      <p className="text-white">Con años de experiencia en el campo, puedes confiar en que tu vehículo está en buenas manos.</p>
-    </div>
-  );
-}
-
 function ReservarCita() {
-  const { register, handleSubmit, reset, formState: { errors, isValid }, getValues } = useForm({ mode: 'onChange' });
+  const schema = yup.object().shape({
+    rut: yup
+      .string()
+      .required("Este campo es requerido")
+      .matches(/^\d{7,9}-[\dKk]$/, "El RUT debe tener el formato 12345678-9"),
+    // Agrega aquí las validaciones para los demás campos...
+  });
+
+  const { register, handleSubmit, reset, formState: { errors, isValid }, getValues } = useForm({
+    mode: 'onChange',
+    resolver: yupResolver(schema),
+  });
+
   const [showModal, setShowModal] = useState(false);
   const [showReviewModal, setShowReviewModal] = useState(false); // Agrega esta línea
   const [formData, setFormData] = useState(null);
@@ -117,7 +117,7 @@ function ReservarCita() {
   const handleClose = () => setShowModal(false);
   const handleShow = () => setShowModal(true);
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     if (!isValid) {
       Swal.fire(
         'Formulario incompleto',
@@ -126,9 +126,27 @@ function ReservarCita() {
       );
       return;
     }
-
-    setFormData(data);
-    setShowModal(true);
+  
+    const { rut } = data;
+  
+    // Verificar si ya existe un documento con el mismo RUT
+    const docRef = doc(db, 'citas', rut);
+    const docSnap = await getDoc(docRef);
+  
+    if (docSnap.exists()) {
+      // Si el documento existe, mostrar un SweetAlert al usuario
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'El RUT ya está registrado con una cita solicitada',
+      });
+    } else {
+      // Si el documento no existe, guardar el nuevo documento
+      await setDoc(docRef, data);
+      // manejar respuesta exitosa
+      setFormData(data);
+      handleShow();
+    }
   };
 
   const handleCheckCita = async () => {
@@ -200,7 +218,7 @@ function ReservarCita() {
 
   const handleConfirm = async () => {
     try {
-      await addDoc(collection(firestore, 'citas'), formData);
+      await addDoc(collection(db, 'citas'), formData);
       console.log("Documento escrito con éxito");
       Swal.fire(
         'Formulario enviado',
@@ -213,7 +231,7 @@ function ReservarCita() {
       console.error("Error al agregar el documento: ", e);
     }
   };
-
+  
   const handleCancel = () => {
     setShowModal(false);
   };
@@ -235,7 +253,7 @@ function ReservarCita() {
         'success'
       );
     }
-  };  
+  }; 
 
   const handleTermsAndConditions = () => {
     Swal.fire({
@@ -314,7 +332,7 @@ function ReservarCita() {
               <form onSubmit={handleSubmit(onSubmit)}>
               <div className="row">
           <div className="col-md-6 mb-3">
-            <input {...register("rut", { required: true })} placeholder="RUT" className="form-control" />
+            <input {...register("rut", { required: true })} placeholder="RUT (Ej:12345-5)" className="form-control" />
             {errors.rut && <div className="text-danger">Este campo es requerido</div>}
           </div>
           <div className="col-md-6 mb-3">

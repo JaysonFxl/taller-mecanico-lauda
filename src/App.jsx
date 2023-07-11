@@ -240,17 +240,19 @@ function ReservarCita() {
     Swal.fire({
       title: 'Términos y Condiciones',
       html: `
-        <h1>Términos y Condiciones</h1>
-        <p>Al enviar este formulario, usted acepta los siguientes términos y condiciones:</p>
-        <ol>
-          <li>El taller mecánico se reserva el derecho de rechazar cualquier cita por cualquier motivo.</li>
-          <li>La cita solo se considera confirmada cuando reciba una confirmación por parte del taller mecánico.</li>
-          <li>Debe llegar a tiempo para su cita. Si llega tarde, es posible que su cita deba ser reprogramada.</li>
-          <li>Debe proporcionar toda la información requerida en el formulario de cita. Si proporciona información falsa o engañosa, su cita puede ser cancelada.</li>
-          <li>El taller mecánico no se hace responsable de los objetos personales dejados en el vehículo. Por favor, retire todos los objetos personales antes de dejar su vehículo en el taller.</li>
-          <li>El taller mecánico se reserva el derecho de cambiar estos términos y condiciones en cualquier momento sin previo aviso.</li>
-        </ol>
-        <p>Al hacer clic en "Enviar", usted confirma que ha leído y comprendido estos términos y condiciones y que acepta cumplir con ellos.</p>
+        <div class="terms-conditions">
+          <h1>Términos y Condiciones</h1>
+          <p>Al enviar este formulario, usted acepta los siguientes términos y condiciones:</p>
+          <ol>
+            <li>El taller mecánico se reserva el derecho de rechazar cualquier cita por cualquier motivo.</li>
+            <li>La cita solo se considera confirmada cuando reciba una confirmación por parte del taller mecánico.</li>
+            <li>Debe llegar a tiempo para su cita. Si llega tarde, es posible que su cita deba ser reprogramada.</li>
+            <li>Debe proporcionar toda la información requerida en el formulario de cita. Si proporciona información falsa o engañosa, su cita puede ser cancelada.</li>
+            <li>El taller mecánico no se hace responsable de los objetos personales dejados en el vehículo. Por favor, retire todos los objetos personales antes de dejar su vehículo en el taller.</li>
+            <li>El taller mecánico se reserva el derecho de cambiar estos términos y condiciones en cualquier momento sin previo aviso.</li>
+          </ol>
+          <p>Al hacer clic en "Enviar", usted confirma que ha leído y comprendido estos términos y condiciones y que acepta cumplir con ellos.</p>
+        </div>
       `,
       confirmButtonText: 'Cerrar',
       customClass: {
@@ -261,7 +263,7 @@ function ReservarCita() {
         confirmButton: 'my-swal-confirm-button'
       }
     });
-  };
+  };  
 
   return (
     <div className="d-flex align-items-center justify-content-center" style={{height: '100vh'}}>

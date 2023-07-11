@@ -153,6 +153,25 @@ body {
   color: #FFD700; /* Este es un tono de dorado más brillante */
 }
 
-#terms {
-  margin-right: 10px;
+.my-swal-container {
+  background-color: black;
+}
+
+.my-swal-popup {
+  background-color: black;
+}
+
+.my-swal-title, .my-swal-content, .my-swal-confirm-button {
+  color: #FFD700; /* Este es un tono de dorado más brillante */
+}
+
+.terms-conditions {
+  border: 2px solid #FFD700;
+  border-radius: 10px;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+.terms-conditions h1, .terms-conditions p, .terms-conditions ol li {
+  color: #FFD700;
 }

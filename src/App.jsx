@@ -114,7 +114,34 @@ function ReservarCita() {
       .string()
       .required("Este campo es requerido")
       .matches(/^\d{7,9}-[\dKk]$/, "El RUT debe tener el formato 12345678-9"),
-    // Agrega aquí las validaciones para los demás campos...
+    nombre: yup
+      .string()
+      .required("Este campo es requerido"),
+    apellido: yup
+      .string()
+      .required("Este campo es requerido"),
+    email: yup
+      .string()
+      .email("Debe ser un email válido")
+      .required("Este campo es requerido"),
+    telefono: yup
+      .string()
+      .required("Este campo es requerido"),
+    motivo: yup
+      .string()
+      .required("Este campo es requerido"),
+    patente: yup
+      .string()
+      .required("Este campo es requerido"),
+    modelo: yup
+      .string()
+      .required("Este campo es requerido"),
+    detalles: yup
+      .string()
+      .required("Este campo es requerido"),
+    terms: yup
+      .boolean()
+      .oneOf([true], 'Debes aceptar los términos y condiciones')
   });
 
   const { register, handleSubmit, reset, formState: { errors, isValid }, getValues } = useForm({
@@ -191,7 +218,7 @@ function ReservarCita() {
     });
   
     if (rut) {
-      const citaRef = collection(firestore, 'citas');
+      const citaRef = collection(db, 'citas');
       const q = query(citaRef, where("rut", "==", rut));
       const querySnapshot = await getDocs(q);
       if (querySnapshot.empty) {

@@ -152,3 +152,7 @@ body {
 .info-cita-value {
   color: #FFD700; /* Este es un tono de dorado más brillante */
 }
+
+#terms {
+  margin-right: 10px;
+}

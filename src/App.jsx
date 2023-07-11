@@ -311,10 +311,10 @@ function ReservarCita() {
           {errors.detalles && <div className="text-danger">Este campo es requerido</div>}
         </div>
         <div className="mb-3">
-          <input {...register("terms", { required: true })} type="checkbox" id="terms" />
-          <label htmlFor="terms">Acepto los <a href="#" onClick={handleShowTerms}>Términos y condiciones</a></label>
-          {errors.terms && <div className="text-danger">Debes aceptar los términos y condiciones</div>}
-        </div>
+            <input {...register("terms", { required: true })} type="checkbox" id="terms" className="me-2" />
+            <label htmlFor="terms">Acepto los <a href="#" onClick={handleShowTerms}>Términos y condiciones</a></label>
+            {errors.terms && <div className="text-danger">Debes aceptar los términos y condiciones</div>}
+          </div>
                 <div className="d-grid gap-2 d-md-flex justify-content-md-end">
                   <input type="submit" className="btn btn-warning" value="Enviar" />
                   <button type="button" className="btn btn-danger" onClick={handleLimpiar}>Limpiar</button>
